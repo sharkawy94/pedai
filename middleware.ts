@@ -1,17 +1,33 @@
-// Protecting routes with next-auth
-// https://next-auth.js.org/configuration/nextjs#middleware
-// https://nextjs.org/docs/app/building-your-application/routing/middleware
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
+import { getToken } from 'next-auth/jwt';
 
-import NextAuth from 'next-auth';
-import authConfig from './auth.config';
+export async function middleware(request: NextRequest) {
+  const token = await getToken({
+    req: request,
+    secret: process.env.NEXTAUTH_SECRET
+  });
 
-const { auth } = NextAuth(authConfig);
+  const { pathname } = request.nextUrl;
 
-export default auth((req) => {
-  if (!req.auth) {
-    const url = req.url.replace(req.nextUrl.pathname, '/');
-    return Response.redirect(url);
+  // Allow access to sign-in and sign-up pages for unauthenticated users
+  if (!token && (pathname === '/' || pathname === '/signup')) {
+    return NextResponse.next();
   }
-});
 
-export const config = { matcher: ['/dashboard/:path*'] };
+  // Redirect authenticated users to dashboard if they try to access sign-in or sign-up pages
+  if (token && (pathname === '/' || pathname === '/signup')) {
+    return NextResponse.redirect(new URL('/dashboard', request.url));
+  }
+
+  // Redirect unauthenticated users to sign-in page for other protected routes
+  if (!token) {
+    return NextResponse.redirect(new URL('/', request.url));
+  }
+
+  return NextResponse.next();
+}
+
+export const config = {
+  matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)']
+};

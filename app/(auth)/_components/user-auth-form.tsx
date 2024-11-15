@@ -172,3 +172,5 @@ export function UserAuthForm({ className, mode, ...props }: UserAuthFormProps) {
     </div>
   );
 }
+
+export default UserAuthForm;

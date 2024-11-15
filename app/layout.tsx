@@ -5,6 +5,7 @@ import type { Metadata } from 'next';
 import { Lato } from 'next/font/google';
 import NextTopLoader from 'nextjs-toploader';
 import './globals.css';
+import { ToastProvider } from '@/components/ui/toast';
 
 export const metadata: Metadata = {
   title: 'Next Shadcn',
@@ -33,7 +34,7 @@ export default async function RootLayout({
         <NextTopLoader showSpinner={false} />
         <Providers session={session}>
           <Toaster />
-          {children}
+          <ToastProvider>{children}</ToastProvider>
         </Providers>
       </body>
     </html>

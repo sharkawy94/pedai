@@ -21,7 +21,7 @@ export default function SignInViewPage() {
       >
         Login
       </Link>
-      <div className="relative hidden h-full flex-col bg-muted p-10 text-white lg:flex dark:border-r">
+      <div className="relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex">
         <div className="absolute inset-0 bg-zinc-900" />
         <div className="relative z-20 flex items-center text-lg font-medium">
           <svg
@@ -59,7 +59,15 @@ export default function SignInViewPage() {
               Enter your email below to create your account
             </p>
           </div>
-          <UserAuthForm />
+          <UserAuthForm mode="signin" />
+          <p className="px-8 text-center text-sm text-muted-foreground">
+            <Link
+              href="/signup"
+              className="hover:text-brand underline underline-offset-4"
+            >
+              Don&apos;t have an account? Sign Up
+            </Link>
+          </p>
           <p className="px-8 text-center text-sm text-muted-foreground">
             By clicking continue, you agree to our{' '}
             <Link
